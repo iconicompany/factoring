@@ -1,0 +1,50 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(customer, "Клиент", "оформляет гарантии на платформе")
+Person(manager, "Сотрудник", "сотрудник банка")
+
+System_Boundary(icompanysystem, "Платформа") {
+
+System(cabinet, "Личный кабинет", "")
+System(offers, "Модуль заявок", "")
+System(settlemenets, "Модуль расчетов", "Баланс, расчеты, безопасные сделки")
+System(edm, "Модуль ЭДО", "Онлайн договора, акты")
+System(factcalc, "Модуль подбора продукта", "Калькулатор параметров факторинга")
+
+'System(videochat, "Видеочат", "Собственная разработка")
+
+System(docclassifier, "Распознаватель документов", "Классифицирует и считывает данные со сканов")
+
+System(docgen, "Генератор документов", "Генератор печатных форм")
+
+Rel(customer, cabinet, "Заводит заявку", "web-интерфейс")
+
+Rel(manager, cabinet, "Работает с заявкой", "web-интерфейс")
+
+Rel(settlemenets, cabinet, "Отражает баланс и расходы")
+Rel(edm, cabinet, "Отражает текущие договора")
+
+Rel(offers, cabinet, "Отражает текущие заявки")
+
+'Rel(manager, factcalc, "Подбирает продукт")
+'Rel(customer,factcalc, "Подбирает продукт")
+
+'Rel(cabinet, videochat, "Видеозвонки из платформы")
+
+Rel(cabinet,docclassifier,"Классификация и распознавание сканов")
+
+Rel(cabinet,docgen, "генерирует договора, акты и другие документы")
+
+}
+
+System(sed, "СЭД", "Диадок, ГосКлюч, NoPaper")
+Rel(edm,sed,"Получает и отправляет документы на подпись")
+
+System(rkoapi, "РКО", "РКО API Банка")
+
+Rel(settlemenets, rkoapi,"Получает выписки, выгружает платежи")
+System(recognition, "Сервис распознавания документов")
+Rel(docclassifier, recognition, "Распознает документы")
+
+@enduml
